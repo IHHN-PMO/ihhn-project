@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IHHN IT Projects Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="projects.js"></script>
+</head>
+
+<body>
+
+<!-- PASSWORD SCREEN -->
+
+<div id="loginScreen">
+
+    <div class="login-box">
+
+        <h1>IHHN PMO</h1>
+        <h3>IT Projects Dashboard</h3>
+
+        <input type="password"
+               id="password"
+               placeholder="Enter Password">
+
+        <button onclick="checkPassword()">
+            Access Dashboard
+        </button>
+
+        <p id="error"></p>
+
+    </div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" style="display:none">
+
+<header>
+
+<h1>IHHN — IT PROJECTS DASHBOARD</h1>
+
+<p>Indus Hospital & Health Network | IT Directorate | PMO</p>
+
+</header>
+
+<section class="cards">
+
+<div class="card">
+<h2 id="totalProjects"></h2>
+<p>Total Projects</p>
+</div>
+
+<div class="card green">
+<h2 id="closedProjects"></h2>
+<p>Closed / Live</p>
+</div>
+
+<div class="card blue">
+<h2 id="progressProjects"></h2>
+<p>In Progress/UAT</p>
+</div>
+
+<div class="card red">
+<h2 id="notStartedProjects"></h2>
+<p>Not Started</p>
+</div>
+
+<div class="card teal">
+<h2 id="supportProjects"></h2>
+<p>Under Support</p>
+</div>
+
+</section>
+
+<section>
+
+<h3>Overall Completion Rate</h3>
+
+<div class="progress">
+
+<div id="progressBar"></div>
+
+</div>
+
+<p id="completionText"></p>
+
+</section>
+
+<section>
+
+<h3>Application Projects</h3>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+<th>Project</th>
+<th>Status</th>
+<th>Campus</th>
+
+</tr>
+
+</thead>
+
+<tbody id="applicationProjects"></tbody>
+
+</table>
+
+</section>
+
+</div>
+
+<script>
+
+function checkPassword(){
+
+const pwd =
+document.getElementById("password").value;
+
+const valid =
+atob("aWhobkAyMDI2Iw==");
+
+if(pwd===valid){
+
+document.getElementById("loginScreen")
+.style.display="none";
+
+document.getElementById("dashboard")
+.style.display="block";
+
+loadDashboard();
+
+}
+else{
+
+document.getElementById("error")
+.innerText="Invalid Password";
+
+}
+
+}
+
+function loadDashboard(){
+
+document.getElementById("totalProjects")
+.innerText=dashboard.totalProjects;
+
+document.getElementById("closedProjects")
+.innerText=dashboard.closedLive;
+
+document.getElementById("progressProjects")
+.innerText=dashboard.inProgress;
+
+document.getElementById("notStartedProjects")
+.innerText=dashboard.notStarted;
+
+document.getElementById("supportProjects")
+.innerText=dashboard.support;
+
+let percent=
+Math.round(
+(dashboard.closedLive/dashboard.totalProjects)*100
+);
+
+document.getElementById("progressBar")
+.style.width=percent+"%";
+
+document.getElementById("completionText")
+.innerText=
+dashboard.closedLive +
+" of " +
+dashboard.totalProjects +
+" projects completed ("+
+percent+"%)";
+
+let html="";
+
+projects.forEach((p,index)=>{
+
+html+=`
+<tr>
+<td>${index+1}</td>
+<td>${p.name}</td>
+<td>${p.status}</td>
+<td>${p.campus}</td>
+</tr>
+`;
+
+});
+
+document.getElementById(
+"applicationProjects"
+).innerHTML=html;
+
+}
+
+</script>
+
+</body>
+</html>
