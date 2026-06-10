@@ -3,117 +3,375 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IHHN IT Projects Dashboard</title>
+<title>IHHN — IT Projects Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Calibri,sans-serif;background:#F0F2F5;color:#1E293B;font-size:13px;padding:16px}
+.db{max-width:1320px;margin:0 auto}
 
-<link rel="stylesheet" href="style.css">
-<script src="projects.js"></script>
+/* HEADER */
+.header{background:#0D2B55;border-radius:10px;padding:18px 24px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.hdr-left h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:.3px}
+.hdr-left p{font-size:11px;color:rgba(255,255,255,.6);margin-top:3px;font-style:italic}
+.hdr-right{display:flex;align-items:center;gap:14px}
+.hdr-logo{background:#fff;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:8px}
+.hdr-logo-fallback{background:#DC2626;border-radius:8px;padding:7px 14px;color:#fff;font-weight:800;font-size:15px;letter-spacing:1px}
+.date-badge{font-size:11px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;font-style:italic;white-space:nowrap}
+
+/* SECTION LABEL */
+.sec{font-size:10px;font-weight:700;letter-spacing:.08em;color:#64748B;text-transform:uppercase;padding:5px 10px;background:#EEF2F7;border-radius:6px;border-bottom:2.5px solid #185FA5;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border-left:5px solid;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.kpi .lbl{font-size:10px;color:#64748B;margin-bottom:5px}
+.kpi .val{font-size:28px;font-weight:800;line-height:1;margin-bottom:5px}
+.kpi .sub{font-size:10px;color:#94A3B8;font-style:italic}
+.kpi.c-navy{border-color:#0D2B55}.kpi.c-navy .val{color:#0D2B55}
+.kpi.c-green{border-color:#1D9E75}.kpi.c-green .val{color:#1D9E75}
+.kpi.c-blue{border-color:#185FA5}.kpi.c-blue .val{color:#185FA5}
+.kpi.c-red{border-color:#DC2626}.kpi.c-red .val{color:#DC2626}
+.kpi.c-teal{border-color:#0B7285}.kpi.c-teal .val{color:#0B7285}
+
+/* PROGRESS */
+.prog-card{background:#fff;border-radius:10px;padding:14px 20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-top .ptxt{font-size:16px;font-weight:700;color:#0D2B55}
+.prog-top .ppct{font-size:16px;font-weight:800;color:#1D9E75}
+.pbar{height:10px;background:#EEF2F7;border-radius:5px;overflow:hidden}
+.pfill{height:100%;border-radius:5px;background:#1D9E75}
+
+/* STATUS TABLE */
+.tbl-card{background:#fff;border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.tbl-card table{width:100%;border-collapse:collapse}
+.tbl-card th{background:#0D2B55;color:#fff;font-size:9.5px;font-weight:700;padding:10px 14px;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.tbl-card th:first-child{text-align:left;width:22%}
+.tbl-card td{padding:9px 14px;font-size:12px;border-bottom:.5px solid #F1F5F9;text-align:center;font-weight:600}
+.tbl-card td:first-child{text-align:left}
+.tbl-card tr:nth-child(even) td{background:#FAFBFC}
+.total-row td{background:#1A3F6F!important;color:#fff!important;font-weight:700!important;border:none!important}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.b-live{background:#D1FAE5;color:#065F46}
+.b-prog{background:#D6E8FA;color:#0C447C}
+.b-uat{background:#EEEDFE;color:#3C3489}
+.b-ns{background:#FEE2E2;color:#991B1B}
+.b-yes{color:#065F46;font-weight:700}
+.b-no{color:#991B1B;font-weight:700}
+.b-started{background:#D0ECF0;color:#0B5966}
+.b-ongoing{background:#CFFAFE;color:#0E5766}
+
+/* SUPPORT */
+.sup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:600px){.sup-grid{grid-template-columns:1fr}}
+.sup-card{border-radius:10px;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.sup-card.sc-green{background:#F0FDF4;border:1px solid #A7F3D0}
+.sup-card.sc-red{background:#FFF5F5;border:1px solid #FCA5A5}
+.sup-lbl{font-size:11px;font-weight:700;margin-bottom:8px}
+.sc-green .sup-lbl{color:#065F46}
+.sc-red .sup-lbl{color:#991B1B}
+.sup-nums{display:flex;align-items:baseline;gap:14px}
+.sup-num{font-size:34px;font-weight:800}
+.sc-green .sup-num{color:#1D9E75}
+.sc-red .sup-num{color:#DC2626}
+.sup-pct{font-size:18px;font-weight:700}
+.sc-green .sup-pct{color:#059669}
+.sc-red .sup-pct{color:#DC2626}
+.sup-icon svg{opacity:.25}
+
+/* PROJECT TABLES */
+.proj-card{background:#fff;border-radius:10px;overflow:hidden;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.cat-bar{padding:10px 16px;font-size:10px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.07em}
+.proj-card table{width:100%;border-collapse:collapse;table-layout:fixed}
+.proj-card th{background:#0D2B55;color:#fff;font-size:9.5px;font-weight:700;padding:9px 12px;text-align:left;text-transform:uppercase;letter-spacing:.05em}
+.proj-card th:nth-child(1){width:4%}
+.proj-card th:nth-child(2){width:46%}
+.proj-card th:nth-child(3){width:20%}
+.proj-card th:nth-child(4){width:20%}
+.proj-card th:nth-child(5){width:10%;text-align:center}
+.proj-card td{padding:7px 12px;font-size:11px;border-bottom:.5px solid #F1F5F9;vertical-align:middle}
+.proj-card td:nth-child(1){color:#94A3B8;font-size:10px;text-align:center}
+.proj-card td:nth-child(3){text-align:center}
+.proj-card td:nth-child(4){font-size:10.5px;color:#475569;text-align:center}
+.proj-card td:nth-child(5){text-align:center}
+.proj-card tr:nth-child(even) td{background:#FAFBFC}
+.proj-card tr:last-child td{border-bottom:none}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;background:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600}
+.ldot{width:12px;height:12px;border-radius:50%}
+
+/* FOOTER */
+.footer{background:#0D2B55;border-radius:10px;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:6px}
+.footer span{font-size:11px;color:rgba(255,255,255,.6)}
+
+/* Print */
+@media print{body{background:#fff;padding:8px}.db{max-width:100%}}
+</style>
 </head>
-
 <body>
-
-<!-- PASSWORD SCREEN -->
 
 <div id="loginScreen">
 
-    <div class="login-box">
+<div class="loginBox">
 
-        <h1>IHHN PMO</h1>
-        <h3>IT Projects Dashboard</h3>
+<img src="https://www.indushospital.org.pk/wp-content/uploads/2022/09/IHHN-Logo.png"
+style="height:80px">
 
-        <input type="password"
-               id="password"
-               placeholder="Enter Password">
+<h2>IHHN PMO Dashboard</h2>
 
-        <button onclick="checkPassword()">
-            Access Dashboard
-        </button>
+<p>Please enter password</p>
 
-        <p id="error"></p>
+<input
+type="password"
+id="password"
+placeholder="Password">
 
+<button onclick="checkPassword()">
+Access Dashboard
+</button>
+
+<div id="errorMsg"></div>
+
+</div>
+
+</div>
+
+<div id="dashboardContent" style="display:none">
+
+<div class="db">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="hdr-left">
+    <h1>IHHN &mdash; IT PROJECTS DASHBOARD</h1>
+    <p>Indus Hospital &amp; Health Network &nbsp;|&nbsp; IT Directorate &nbsp;|&nbsp; PMO</p>
+  </div>
+  <div class="hdr-right">
+    <span class="date-badge">Oct 2024 &ndash; May 2026</span>
+    <div class="hdr-logo">
+      <img src="https://www.indushospital.org.pk/wp-content/uploads/2022/09/IHHN-Logo.png"
+           alt="IHHN" style="height:38px;width:auto"
+           onerror="this.parentNode.classList.add('hdr-logo-fallback');this.parentNode.classList.remove('hdr-logo');this.parentNode.textContent='IHHN'">
     </div>
-
+  </div>
 </div>
 
-<!-- DASHBOARD -->
-
-<div id="dashboard" style="display:none">
-
-<header>
-
-<h1>IHHN — IT PROJECTS DASHBOARD</h1>
-
-<p>Indus Hospital & Health Network | IT Directorate | PMO</p>
-
-</header>
-
-<section class="cards">
-
-<div class="card">
-<h2 id="totalProjects"></h2>
-<p>Total Projects</p>
+<!-- EXECUTIVE SUMMARY -->
+<div class="sec">&#128202;&nbsp; Executive Summary &mdash; Project Health at a Glance</div>
+<div class="kpi-row">
+  <div class="kpi c-navy"><div class="lbl">Total Projects</div><div class="val">70</div><div class="sub">All categories</div></div>
+  <div class="kpi c-green"><div class="lbl">Live / Closed</div><div class="val">36</div><div class="sub">Deployed &amp; running</div></div>
+  <div class="kpi c-blue"><div class="lbl">In Progress / UAT</div><div class="val">17</div><div class="sub">Active development</div></div>
+  <div class="kpi c-red"><div class="lbl">Not Started</div><div class="val">17</div><div class="sub">Pending initiation</div></div>
+  <div class="kpi c-teal"><div class="lbl">Under Support</div><div class="val">38</div><div class="sub">Actively supported</div></div>
 </div>
 
-<div class="card green">
-<h2 id="closedProjects"></h2>
-<p>Closed / Live</p>
+<!-- PROGRESS -->
+<div class="sec">&#128200;&nbsp; Overall Completion Rate</div>
+<div class="prog-card">
+  <div class="prog-top">
+    <span class="ptxt">36 of 70 projects completed</span>
+    <span class="ppct">51% Complete</span>
+  </div>
+  <div class="pbar"><div class="pfill" style="width:51%"></div></div>
 </div>
 
-<div class="card blue">
-<h2 id="progressProjects"></h2>
-<p>In Progress/UAT</p>
+<!-- STATUS TABLE -->
+<div class="sec">&#127919;&nbsp; Status Summary &mdash; All Categories</div>
+<div class="tbl-card">
+  <table>
+    <thead>
+      <tr><th>Status</th><th>Application</th><th>ERP</th><th>Infra</th><th>Academic</th><th>Total</th><th>%</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge b-live">CLOSED / LIVE</span></td>
+        <td>26</td><td>2</td><td>0</td><td>8</td>
+        <td style="color:#0D2B55">36</td><td>51%</td>
+      </tr>
+      <tr>
+        <td><span class="badge b-prog">IN PROGRESS</span></td>
+        <td>11</td><td>1</td><td>3</td><td>0</td>
+        <td style="color:#0D2B55">15</td><td>21%</td>
+      </tr>
+      <tr>
+        <td><span class="badge b-uat">IN UAT</span></td>
+        <td>2</td><td>0</td><td>0</td><td>0</td>
+        <td style="color:#0D2B55">2</td><td>3%</td>
+      </tr>
+      <tr>
+        <td><span class="badge b-ns">NOT STARTED</span></td>
+        <td>15</td><td>2</td><td>0</td><td>0</td>
+        <td style="color:#0D2B55">17</td><td>24%</td>
+      </tr>
+      <tr class="total-row">
+        <td>TOTAL</td><td>54</td><td>5</td><td>3</td><td>8</td><td>70</td><td>100%</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<div class="card red">
-<h2 id="notStartedProjects"></h2>
-<p>Not Started</p>
+<!-- SUPPORT STATUS -->
+<div class="sec">&#128296;&nbsp; Support Status &mdash; Under Support vs Not</div>
+<div class="sup-grid">
+  <div class="sup-card sc-green">
+    <div>
+      <div class="sup-lbl">Projects LIVE and Under Support (YES)</div>
+      <div class="sup-nums"><span class="sup-num">38</span><span class="sup-pct">54%</span></div>
+    </div>
+    <div class="sup-icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+  </div>
+  <div class="sup-card sc-red">
+    <div>
+      <div class="sup-lbl">NOT Started / UAT / In Progress</div>
+      <div class="sup-nums"><span class="sup-num">32</span><span class="sup-pct">46%</span></div>
+    </div>
+    <div class="sup-icon">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+  </div>
 </div>
 
-<div class="card teal">
-<h2 id="supportProjects"></h2>
-<p>Under Support</p>
+<!-- APPLICATION PROJECTS -->
+<div class="sec">&#128241;&nbsp; Detailed Project List &mdash; Application Projects</div>
+<div class="proj-card">
+  <div class="cat-bar" style="background:#185FA5">Application Projects &nbsp;&mdash;&nbsp; 54 Projects</div>
+  <table>
+    <thead><tr><th>#</th><th>Project Name</th><th>Status</th><th>Campus</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>HMIS 2.0 Encounter ER KRG</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>2</td><td>HMIS 2.0 OPD Encounter KRG</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>3</td><td>HMIS 2.0 Admission Office KRG</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>4</td><td>HMIS 2.0 Encounter ER SSMC</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>5</td><td>HMIS 2.0 Front Office KRG</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>6</td><td>HMIS 2.0 Front Office SSMC</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>7</td><td>HMIS 2.0 CathLab</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>8</td><td>HMIS 2.0 CSSD Module</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>9</td><td>HMIS 2.0 Dialysis Module</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>10</td><td>HMIS 2.0 PATIENT WELFARE</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>11</td><td>HMIS 2.0 Procedure Management</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>12</td><td>HMIS 2.0 ICU Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>13</td><td>Microservices | Dev Ops Architecture</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>14</td><td>HMIS 2.0 Pharmacy Module</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>15</td><td>HMIS 1.0 CRs</td><td><span class="badge b-ongoing">ONGOING</span></td><td>KRG | SOUTH | NORTH</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>16</td><td>HRMS v2.0 (HR Core) | Academics | KRG | SSMC | KRG Expansion | PIB | IHHN Core | PQA Endowment</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>17</td><td>HRMS v2.0 (Recruitment) | Academics | KRG | SSMC | KRG Expansion | PIB | IHHN Core | PQA Endowment</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>18</td><td>HRMS v2.0 (Payroll) | Academics | KRG | SSMC | KRG Expansion | PIB | IHHN Core | PQA Endowment</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>19</td><td>HRMS v2.0 (Recruitment)</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>QFNST</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>20</td><td>HRMS v2.0 (Employee Attendance) | Academics | KRG | SSMC | KRG Expansion | PIB | IHHN Core | PQA Endowment</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>21</td><td>HRMS v2.0 (Comp n Ben) | Academics | KRG | SSMC | KRG Expansion | PIB | IHHN Core | PQA Endowment</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>22</td><td>HRMS v2.0 Employee Training</td><td><span class="badge b-uat">IN UAT</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>23</td><td>B2B Commercial APP</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>24</td><td>HRMS v2.0 KPIs</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>25</td><td>HRMS v2.0 Cost Allocation</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>26</td><td>PACS</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>27</td><td>HMIS 2.0 High Availability</td><td><span class="badge b-uat">IN UAT</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>28</td><td>B2B Commercial APP | CHD RekoDiq</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>29</td><td>B2B Commercial APP | ARB Medical</td><td><span class="badge b-uat">IN UAT</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>30</td><td>BADIN | THUMB IMPRESSION INTEGRATION</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>BADIN</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>31</td><td>MSD Dashboard</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>32</td><td>ICD Coding EMR Tasks</td><td><span class="badge b-ongoing">ONGOING</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>33</td><td>HAMI Integration with HMIS 2.0</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>34</td><td>QIPS Incident Management</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>35</td><td>MSD IMPLEMENTATION | RTEH | MIKD</td><td><span class="badge b-ns">NOT STARTED</span></td><td>MIKD | RTEH</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>36</td><td>QIPS KPI</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>37</td><td>MSD IMPLEMENTATION | QFNST</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>QFNST</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>38</td><td>BBMIS-HMIS Integration | NORTH</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>NORTH</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>39</td><td>JCIA Gap Analysis | Pre-Audit Activitities</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>40</td><td>CHD Telehealth</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG | CHD</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>41</td><td>BBMIS-HMIS Integration | BHONG</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>BHONG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>42</td><td>POS | NORTH Region</td><td><span class="badge b-uat">IN UAT</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>43</td><td>HMIS 2.0 ICU Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>44</td><td>HMIS 2.0 Infection control</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>45</td><td>HMIS 2.0 Procedure Management</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>46</td><td>HMIS 2.0 NFSD Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>47</td><td>HMIS 2.0 Chemo Management Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>48</td><td>HMIS 2.0 Billing Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>49</td><td>HMIS 2.0 Ambulatory Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>50</td><td>HMIS 2.0 Inventory Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>51</td><td>HMIS 2.0 Malaria Management Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>52</td><td>HMIS 2.0 Pain Management Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>53</td><td>HMIS 2.0 Rehab Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>54</td><td>Vehicle Management Module</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+    </tbody>
+  </table>
 </div>
 
-</section>
+<!-- ERP / INFRA / ACADEMIC -->
+<div class="sec">&#127970;&nbsp; ERP | Infrastructure | Academic Projects</div>
 
-<section>
-
-<h3>Overall Completion Rate</h3>
-
-<div class="progress">
-
-<div id="progressBar"></div>
-
+<!-- ERP -->
+<div class="proj-card">
+  <div class="cat-bar" style="background:#0B7285">ERP Projects &nbsp;&mdash;&nbsp; 5 Projects</div>
+  <table>
+    <thead><tr><th>#</th><th>Project Name</th><th>Status</th><th>Campus</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Oracle Fusion ERP Inventory, Procurement, Finance (KRG)</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>2</td><td>Oracle Fusion ERP Inventory, Procurement, Finance (QFNST)</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>3</td><td>Oracle Fusion CMMS (KRG)</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>4</td><td>Oracle Fusion - Grants Management (CHD)</td><td><span class="badge b-ns">NOT STARTED</span></td><td>KRG | CHD</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>5</td><td>Oracle Fusion - Online Payment Integration with Banks</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+    </tbody>
+  </table>
 </div>
 
-<p id="completionText"></p>
+<!-- INFRASTRUCTURE -->
+<div class="proj-card">
+  <div class="cat-bar" style="background:#D97706">Infrastructure Projects &nbsp;&mdash;&nbsp; 3 Projects</div>
+  <table>
+    <thead><tr><th>#</th><th>Project Name</th><th>Status</th><th>Campus</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>TIER III Data Centre Audit</td><td><span class="badge b-prog">IN PROGRESS</span></td><td>KRG</td><td><span class="b-no">NO</span></td></tr>
+      <tr><td>2</td><td>Data Centre Migration from TIER II to TIER III</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>3</td><td>Data Centre FABRIC</td><td><span class="badge b-started">STARTED</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+    </tbody>
+  </table>
+</div>
 
-</section>
+<!-- ACADEMIC -->
+<div class="proj-card">
+  <div class="cat-bar" style="background:#534AB7">Academic Projects &nbsp;&mdash;&nbsp; 8 Projects</div>
+  <table>
+    <thead><tr><th>#</th><th>Project Name</th><th>Status</th><th>Campus</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Online Application System</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>2</td><td>People Soft Campus Solution</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>3</td><td>Moodle Updated Version Implementation</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>4</td><td>Integration of OAS and Moodle with PeopleSoft</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>5</td><td>Integration of PeopleSoft and Oracle Fusion</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>6</td><td>REDCAP Upgrade</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>7</td><td>Q Bank</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+      <tr><td>8</td><td>IRB Application</td><td><span class="badge b-live">CLOSED / LIVE</span></td><td>KRG</td><td><span class="b-yes">YES</span></td></tr>
+    </tbody>
+  </table>
+</div>
 
-<section>
+<!-- LEGEND -->
+<div class="sec">&#128273;&nbsp; Status Legend</div>
+<div class="legend">
+  <span class="leg"><span class="ldot" style="background:#1D9E75"></span>CLOSED / LIVE</span>
+  <span class="leg"><span class="ldot" style="background:#185FA5"></span>IN PROGRESS</span>
+  <span class="leg"><span class="ldot" style="background:#0B7285"></span>STARTED</span>
+  <span class="leg"><span class="ldot" style="background:#534AB7"></span>IN UAT</span>
+  <span class="leg"><span class="ldot" style="background:#0E7490"></span>ONGOING</span>
+  <span class="leg"><span class="ldot" style="background:#DC2626"></span>NOT STARTED</span>
+</div>
 
-<h3>Application Projects</h3>
+<!-- FOOTER -->
+<div class="footer">
+  <span>IHHN IT Projects Dashboard &nbsp;|&nbsp; PMO &nbsp;|&nbsp; IT Directorate</span>
+  <span>Oct 2024 &ndash; May 2026</span>
+  <span>CONFIDENTIAL &mdash; For HoD &amp; CIO Use Only</span>
+</div>
 
-<table>
-
-<thead>
-
-<tr>
-
-<th>#</th>
-<th>Project</th>
-<th>Status</th>
-<th>Campus</th>
-
-</tr>
-
-</thead>
-
-<tbody id="applicationProjects"></tbody>
-
-</table>
-
-</section>
-
+</div>
 </div>
 
 <script>
@@ -123,82 +381,33 @@ function checkPassword(){
 const pwd =
 document.getElementById("password").value;
 
-const valid =
-atob("aWhobkAyMDI2Iw==");
-
-if(pwd===valid){
+if(pwd===atob("aWhobkAyMDI2Iw==")){
 
 document.getElementById("loginScreen")
 .style.display="none";
 
-document.getElementById("dashboard")
+document.getElementById("dashboardContent")
 .style.display="block";
-
-loadDashboard();
 
 }
 else{
 
-document.getElementById("error")
-.innerText="Invalid Password";
+document.getElementById("errorMsg")
+.innerHTML="Invalid Password";
 
 }
 
 }
 
-function loadDashboard(){
+document.addEventListener(
+"keypress",
+function(e){
 
-document.getElementById("totalProjects")
-.innerText=dashboard.totalProjects;
-
-document.getElementById("closedProjects")
-.innerText=dashboard.closedLive;
-
-document.getElementById("progressProjects")
-.innerText=dashboard.inProgress;
-
-document.getElementById("notStartedProjects")
-.innerText=dashboard.notStarted;
-
-document.getElementById("supportProjects")
-.innerText=dashboard.support;
-
-let percent=
-Math.round(
-(dashboard.closedLive/dashboard.totalProjects)*100
-);
-
-document.getElementById("progressBar")
-.style.width=percent+"%";
-
-document.getElementById("completionText")
-.innerText=
-dashboard.closedLive +
-" of " +
-dashboard.totalProjects +
-" projects completed ("+
-percent+"%)";
-
-let html="";
-
-projects.forEach((p,index)=>{
-
-html+=`
-<tr>
-<td>${index+1}</td>
-<td>${p.name}</td>
-<td>${p.status}</td>
-<td>${p.campus}</td>
-</tr>
-`;
+if(e.key==="Enter"){
+checkPassword();
+}
 
 });
-
-document.getElementById(
-"applicationProjects"
-).innerHTML=html;
-
-}
 
 </script>
 
